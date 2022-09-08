@@ -1,39 +1,16 @@
 const User = require('../models/user')
+const Customer = require('../models/customer')
+const Address = require('../models/address')
+const Designer = require('../models/designer')
 const jwt = require('jsonwebtoken')
 const { promisify } = require('util')
 // const sendEmail = require('../utils/email')
 const crypto = require('crypto')
-const {jwtSecretKey, jwtExpiry} = require('../config')
+const {jwtSecretKey} = require('../config')
 
-const signToken = (id) => {
-  return jwt.sign({ id }, jwtSecretKey, { expiresIn: jwtExpiry })
-}
 
-const createSendToken = (user, res) => {
-  const token = signToken(user._id)
-
-  res.status(201).json({ user, token })
-}
-
-const signup = async (req, res) => {
-  try {
-    const { firstName, lastName, password, email, phone } = req.body
-    if (!firstName || firstName.trim() === '') return res.status(400).json('firstName Needed');
-    if (!lastName || lastName.trim() === '') return res.status(400).json('lastName Needed');
-    if (!email || email.trim() === '') return res.status(400).json('Email Needed');
-    if (!phone || phone.trim() === '') return res.status(400).json('Phone number needed');
-
-    const existingUser = await User.findOne({ firstName, lastName })
-    if (existingUser) return res.json({ message: 'User with that username already exist' })
-
-    const userObject = { firstName, lastName, password, email, phone }
-    const user = await User.create(userObject)
-
-    // login user, send jwt
-    createSendToken(user, res)
-  } catch (err) {
-    res.status(500).json({ message: 'something went wrong', err })
-  }
+createToken = (id) => {
+  return jwt.sign({ id}, jwtSecretKey, { expiresIn: jwtExpiry })
 }
 
 const login = async (req, res) => {
@@ -48,8 +25,9 @@ const login = async (req, res) => {
     return res.status(401).json({ message: 'Incorrect username or password' })
   }
 
-  // login user, send jwt
-  createSendToken(foundUser, res)
+  const token =  createToken(foundUser._id)
+    res.status(200).json({status: 'success', foundUser, token})
+
 }
 
 const isLoggedIn = async (req, res, next) => {
@@ -62,7 +40,7 @@ const isLoggedIn = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: 'You are not logged in. Login to get access' })
 
     // check if token is valid
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+    const decoded = await promisify(jwt.verify)(token, jwtSecretKey)
     // check if user exist
     const foundUser = await User.findById(decoded.id)
     if (!foundUser) return res.status(401).json({ message: 'User with this token does not exist. Please log in again' })
@@ -70,9 +48,33 @@ const isLoggedIn = async (req, res, next) => {
     // check if user password has been changed
     if (foundUser.changedPasswordAfter(decoded.iat)) return res.status(401).json({ message: 'User recenly changed password. Please login again' })
 
-    // grant access to user
-    req.user = foundUser
-    next()
+    // set different user
+    if(foundUser.role === 'customer'){
+      const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
+      .exec()
+      if(!customer) return res.status(401).json({ message: 'this customer account does not exist' })
+      req.user = customer
+      next()
+    }
+    if(foundUser.role === 'designer'){
+      const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('address').exec()
+      if(!designer) return res.status(401).json({ message: 'this designer account does not exist' })
+      req.user = designer
+      next()
+    }
+    // if(foundUser.role === 'employee'){
+    //   const designer = Designer.findOne({userId: foundUser._id})
+    //   if(!designer) return res.status(401).json({ message: 'this designer account does not exist' })
+    //   req.user = designer
+    //   next()
+    // }
+    // if(foundUser.role === 'designer'){
+    //   const designer = Designer.findOne({userId: foundUser._id})
+    //   if(!designer) return res.status(401).json({ message: 'this designer account does not exist' })
+    //   req.user = designer
+    //   next()
+    // }
+    
   } catch (err) {
     if(err.name === 'TokenExpiredError' )return res.status(401).json({ message: 'Please login' })
     if(err.name === 'JsonWebTokenError' )return res.status(401).json({ message: 'Please login' })
@@ -149,4 +151,4 @@ const updatePassword = async (req, res) => {
   createSendToken(foundUser, res)
 }
 
-module.exports = { signup, login, isLoggedIn, forgotPassword, resetPassword, updatePassword }
+module.exports = { login, isLoggedIn, forgotPassword, resetPassword, updatePassword }

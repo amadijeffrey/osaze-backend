@@ -40,49 +40,7 @@ const userSchema = new mongoose.Schema({
         minlength: 11,
         unique: true,
         trim: true,
-      },
-    cart: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'CartItem'
-        }
-    ],
-    ref: [
-        Number
-    ],
-    orders: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Order'
-        }
-    ],
-    messages: [
-        {
-            type:String
-        }
-    ],
-    body_profile: {
-        bust: Number,
-        shoulder_length: Number,
-        front_waist_length: Number,
-        back_waist_length: Number,
-        arm_length: Number,
-        waist: Number,
-        hip: Number,
-        hip_dip: Number,
-        thigh: Number,
-        ankle: Number,
-        inseam: Number,
-        outseam: Number,
-        crotch_depth: Number
-    },
-    business_info: {
-      brand: String,
-      address: String,
-      about: String,
-      clothTypes: String
-    }
-
+      }
 })
 
 userSchema.pre('save',  async function (next) {

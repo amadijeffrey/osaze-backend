@@ -1,8 +1,12 @@
 const mongoose = require('mongoose')
 
 const orderSchema = new  mongoose.Schema({
-    trackingId: {
-        type: Number,
+    ref: {
+        type: String,
+        required: true
+    },
+    customerId:  {
+        type: String,
         required: true
     },
     date_created: {

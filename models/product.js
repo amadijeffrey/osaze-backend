@@ -13,10 +13,11 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    subCategory:{
-        type: String,
-        required: true
-    },
+    subCategories: [
+        {
+         type: String
+        } 
+     ],
     prices: [
          {
             type: Object
@@ -35,7 +36,8 @@ const productSchema = new mongoose.Schema({
        {
         type: String
        } 
-    ]
+    ],
+    fabric: String
 })
 
 const Product = mongoose.model('Product', productSchema)

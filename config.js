@@ -17,9 +17,9 @@ enviroment.production = {
     'DBURL': process.env.DB_URL,
     'jwtSecretKey': process.env.JWT_SECRET,
     'jwtExpiry': process.env.JWT_EXPIRES_IN,
-    'cloud_name' : process.env.CLOUD_NAME,
-    'api_key' :    process.env.API_KEY,
-    'api_secret' :  process.env.API_SECRET,
+    'cloudName' : process.env.CLOUD_NAME,
+    'apiKey' :    process.env.API_KEY,
+    'apiSecret' :  process.env.API_SECRET,
 }
 
 // Check for present env

@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const helmet = require('helmet')
+const cors = require('cors')
 const {port, DBURL } = require('./config')
 
 
@@ -11,6 +12,10 @@ const productsRoutes = require('./routes/productsRoutes')
 
 const app = express()
 app.use(helmet())
+app.use(cors({
+  origin: '*', 
+  optionSuccessStatus:200
+}))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/api/customer', customersRoutes)

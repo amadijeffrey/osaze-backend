@@ -11,4 +11,6 @@ const getAllOrders = async ( res) => {
     }
   }
 
-  module.exports = {getAllOrders}
+ const updateOrderStatus =  
+
+  module.exports = { getAllOrders }

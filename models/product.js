@@ -41,6 +41,11 @@ const productSchema = new mongoose.Schema({
         {
          type: String
         } 
+    ],
+    customDesigns: [
+        {
+         type: String
+        } 
     ]
 })
 

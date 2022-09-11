@@ -98,27 +98,21 @@ const cartCheckOut = async (req, res) => {
         const customer = await Customer.findById(req.user._id)
         console.log(customer)
         const { reference} = req.body
-        // req.user.cart.forEach( async (cartItem) => {
-        //   const [order] = await Promise.all([
-        //         Order.create({
-        //             ref: reference,
-        //             designer: cartItem.brandName,
-        //             item: cartItem._id,
-        //             customer: req.user.userId,
-        //             billingAddress: req.user.address,
-        //         }),
-        //         Request.create({
-        //             designer: cartItem.brandName,
-        //             item: cartItem._id
-        //         })
-        //     ])
-        //     customer.orders.push(order)
-        // })
-        [1,2,3,4].forEach(el => {
-            
+        req.user.cart.forEach( async (cartItem) => {
+          await Promise.all([
+                Order.create({
+                    ref: reference,
+                    designer: cartItem.brandName,
+                    item: cartItem._id,
+                    customer: req.user.userId,
+                    billingAddress: req.user.address,
+                }),
+                Request.create({
+                    designer: cartItem.brandName,
+                    item: cartItem._id
+                })
+            ])
         })
-
-        customer.save()
 
         res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
 

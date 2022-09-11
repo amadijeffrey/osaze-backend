@@ -8,9 +8,7 @@ const rates = {
 const symbols = ['$', '£', '₦', '€'];
 
  const currencyConverter = {
-    availableCurrencies: Object
-        .keys(rates)
-        .map((label, i) => ({
+    availableCurrencies: Object.keys(rates).map((label, i) => ({
             label,
             symbol: symbols[i]
         })),

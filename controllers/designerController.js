@@ -54,6 +54,23 @@ const getAllRequests = async(req, res) => {
 const allSales = async(req, res) => {
   try{
   const allRequests = await Request.find({ designer: req.user.businessInfo.brandName}).populate('item').exec()
+  const defaultCurrency = '$'
+  const total = []
+  allRequests.forEach(order => {
+    if(order.item.currency === defaultCurrency){
+      total.push(order.item.price)
+    }
+    if(order.item.currency === '€'){
+      total.push(order.item.price)
+    }
+    if(order.item.currency === '₦'){
+      total.push((order.item.price / 422.20).toFixed(2))
+    }
+    if(order.item.currency === '£'){
+      total.push((order.item.price / 0.85).toFixed(2))
+    }
+  })
+  
   res.status(201).json({status: 'success', allRequests})
 
   }catch(err){

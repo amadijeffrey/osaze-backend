@@ -2,7 +2,7 @@ const router = require('express').Router()
 const { isLoggedIn, login, forgotPassword, resetPassword, updatePassword } = require('../controllers/userAuthController')
 const { signup} = require('../controllers/designerAuthController.js')
 const { updateAccount, getProfile, updateAddress } = require('../controllers/userController')
-const {createProduct, updateBusinessInfo} = require('../controllers/designerController')
+const {createProduct, updateBusinessInfo, getAllRequests} = require('../controllers/designerController')
 const upload  = require('../helper/multer')
 
 
@@ -14,7 +14,8 @@ router.patch('/updatepassword', isLoggedIn, updatePassword)
 router.patch('/updateaddress', isLoggedIn, updateAddress)
 router.get('/getProfile', isLoggedIn, getProfile)
 router.patch('/updateaccount', isLoggedIn, updateAccount)
-router.patch('/uodatebusinessinfo', isLoggedIn, updateBusinessInfo)
+router.patch('/updatebusinessinfo', isLoggedIn, updateBusinessInfo)
 router.post('/createproduct', isLoggedIn, upload.single('image'), createProduct)
+router.get('/requests', isLoggedIn, getAllRequests)
 
 module.exports = router

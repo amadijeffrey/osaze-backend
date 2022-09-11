@@ -5,29 +5,34 @@ const orderSchema = new  mongoose.Schema({
         type: String,
         required: true
     },
-    customerId:  {
-        type: String,
-        required: true
+    customer:  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    designer: {
+        type: String
     },
     date_created: {
         type: Date,
         default: Date.now,
     },
+    item: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CartItem'
+    },
     date_delivered: {
         type: Date,
     },
-   items:[
-      {
+    billingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CartItem'
-      }
-    ],
+        ref: 'Address'
+    },
    status:{
     type: String,
     enum: ['order placed', 'shipped', 'delivered', 'cancelled'],
     default: 'order placed'
    },
-   amount_paid: Number
+ 
 })
 
 const Order = mongoose.model('Order', orderSchema)

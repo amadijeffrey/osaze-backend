@@ -1,6 +1,5 @@
-const CartItem = require('../model/cartItem')
-const Product = require('../model/product')
-const User = require('../model/user')
+const Product = require('../models/product')
+const User = require('../models/user')
 
 const getFeaturedProducts = async ( req, res) => {
     try{
@@ -49,25 +48,7 @@ const getProductsUnderCategory = async (req, res) => {
     }
 }
 
-const createProduct = async (req, res) => {
-    try{
-        const { name, images, description,category, price, sizes, rating} = req.body
-        const newProductOptions = {
-            name,
-            images,
-            description,
-            category,
-            price,
-            sizes,
-            rating
-        }
-     
-        const newProduct = await Product.create(newProductOptions)
-        res.status(200).json({status: 'success', newProduct})
-    } catch(err){
-        res.status(500).json({ message: 'something went wrong'})
-    }
-}
+
 
 const searchForProduct = async (req, res) => {
     try{
@@ -146,5 +127,4 @@ const addReferenceToUser = async (req, res) => {
     }
 }
 
-module.exports = { getFeaturedProducts, getProduct, getProductsUnderCategory, 
-    createProduct, searchForProduct, addProductToCart,updateCartItem, deleteCartItem, addReferenceToUser }
+module.exports = { getFeaturedProducts, getProduct, getProductsUnderCategory, searchForProduct,}

@@ -14,17 +14,22 @@ const designerSchema = new mongoose.Schema({
         ref: 'Address'
     },
     businessInfo: {
-        brand: String,
-        about: String,
-        clothTypes: String,
-        businessLocation: String,
+        brandName: String,
+        brandInfo: String,
+        brandLocation: String,
         sketch: String,
-        makeClothes: String,
+        sew: String,
         businessPage: String,
-        sketchSkill: Number,
-        sewingSkill: Number,
+        sketchSkill: String,
+        sewSkill: String,
         imgUrl: String
-      }
+      },
+      requests: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Request'
+        }
+      ]
 })
 
 const Designer = mongoose.model('Designer', designerSchema)

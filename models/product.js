@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const productSchema = new mongoose.Schema({
-    brand: {
+    brandName: {
         type: String,
         required: true
     },
@@ -13,11 +13,11 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    subCategories: [
+    subCategory: 
         {
          type: String
         } 
-     ],
+     ,
     prices: [
          {
             type: Object
@@ -37,7 +37,11 @@ const productSchema = new mongoose.Schema({
         type: String
        } 
     ],
-    fabric: String
+    fabrics: [
+        {
+         type: String
+        } 
+    ]
 })
 
 const Product = mongoose.model('Product', productSchema)

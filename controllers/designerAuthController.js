@@ -12,28 +12,27 @@ const createToken = (id) => {
 
  const signup = async (req, res) => {
   try{
-      const { firstName, lastName, password, email, phone, houseAddress,
-      state, city, country, clothTypes,  brand, about, businessLocation, sketch, 
-      makeClothes, businessPage, sketchSkill, sewingSkill } = req.body
+      const { firstName, lastName, password, email, phoneNumber, houseAddress,
+      state, city, country,  brandName, brandInfo, brandLocation, sketch, 
+      sew, businessPage, sketchSkill, sewSkill } = req.body
 
       if (!firstName || firstName.trim() === '') return res.status(400).json('firstName Needed');
       if (!lastName || lastName.trim() === '') return res.status(400).json('lastName Needed');
       if (!email || email.trim() === '') return res.status(400).json('Email Needed');
-      if (!phone || phone.trim() === '') return res.status(400).json('Phone number needed');
-      if (!brand || brand === '') return res.status(400).json('brand needed');
-      if (!about || about === '') return res.status(400).json('about needed');
+      if (!phoneNumber || phoneNumber.trim() === '') return res.status(400).json('phoneNumber  needed');
+      if (!brandName || brandName === '') return res.status(400).json('brandName needed');
+      if (!brandInfo || brandInfo === '') return res.status(400).json('brandInfo needed');
       if (!state || state === '') return res.status(400).json('state needed');
       if (!city || city === '') return res.status(400).json('city needed');
       if (!country || country === '') return res.status(400).json('country needed');
       if (!houseAddress || houseAddress === '') return res.status(400).json('houseAddress needed');
-      if (!clothTypes || clothTypes === '') return res.status(400).json('cloth types needed');
-      if (!businessLocation || businessLocation === '') return res.status(400).json('business location needed');
+      if (!brandLocation || brandLocation === '') return res.status(400).json('brand location needed');
 
 
-      const existingUser = await User.findOne({ firstName, lastName })
-      if (existingUser) return res.json({ message: 'User with that username already exist' })
+      const existingUser = await User.findOne({ firstName, lastName, email })
+      if (existingUser) return res.json({ message: 'User already exist' })
 
-      const userObject = { firstName, lastName, password, email, phone, role: 'designer' }
+      const userObject = { firstName, lastName, password, email, phoneNumber, role: 'designer' }
       const user = await User.create(userObject)
 
       const address = await Address.create({
@@ -52,15 +51,14 @@ const createToken = (id) => {
       }
 
      const businessInfo =  {
-        brand,
-        about,
-        clothTypes,
-        businessLocation,
+        brandName,
+        brandInfo,
+        brandLocation,
         sketch,
-        makeClothes,
+        sew,
         businessPage,
         sketchSkill,
-        sewingSkill,
+        sewSkill,
         imgUrl: url
       }
    

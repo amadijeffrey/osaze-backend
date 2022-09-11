@@ -1,6 +1,5 @@
 const User = require('../models/user')
 const Customer = require('../models/customer')
-const Address = require('../models/address')
 const Designer = require('../models/designer')
 const jwt = require('jsonwebtoken')
 const { promisify } = require('util')
@@ -26,7 +25,20 @@ const login = async (req, res) => {
   }
 
   const token =  createToken(foundUser._id)
-    res.status(200).json({status: 'success', foundUser, token})
+
+  if (foundUser.role === 'customer'){
+    const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
+    .populate('cart').populate('orders').exec()
+    
+    res.status(200).json({status: 'success', customer, token})
+  }
+
+  if(foundUser.role === 'designer'){
+    const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
+    .populate('requests').exec()
+  
+    res.status(200).json({status: 'success', designer, token})
+  }
 
 }
 
@@ -46,12 +58,12 @@ const isLoggedIn = async (req, res, next) => {
     if (!foundUser) return res.status(401).json({ message: 'User with this token does not exist. Please log in again' })
 
     // check if user password has been changed
-    if (foundUser.changedPasswordAfter(decoded.iat)) return res.status(401).json({ message: 'User recenly changed password. Please login again' })
+    if (foundUser.changedPasswordAfter(decoded.iat)) return res.status(401).json({ message: 'User recently changed password. Please login again' })
 
     // set different user
     if(foundUser.role === 'customer'){
       const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
-      .exec()
+      .populate('cart').populate('orders').exec()
       if(!customer) return res.status(401).json({ message: 'this customer account does not exist' })
       req.user = customer
       next()
@@ -130,12 +142,13 @@ const resetPassword = async (req, res) => {
   await user.save()
 
   // login user, send JWT
-  createSendToken(user, res)
+  const token = createToken(user, res)
 }
 
 const updatePassword = async (req, res) => {
+  try{
   // get user from collection
-  const foundUser = await User.findById(req.user.id)
+  const foundUser = await User.findById(req.user.userId)
   if (!foundUser) return res.status(401).json({ message: 'User not found. Please log in again' })
 
   // check if posted password is correct
@@ -148,7 +161,12 @@ const updatePassword = async (req, res) => {
   await foundUser.save()
 
   // login user, send JWT
-  createSendToken(foundUser, res)
+  const token =  createToken(foundUser._id)
+  res.status(200).json({status: 'success', foundUser, token})
+
+  }catch(err){
+    res.status(500).json({ message: 'something went wrong' })
+  }
 }
 
 module.exports = { login, isLoggedIn, forgotPassword, resetPassword, updatePassword }

@@ -15,18 +15,18 @@ const customerSchema = new mongoose.Schema({
     },
     bodyProfile: {
         bust: Number,
-        shoulder_length: Number,
-        front_waist_length: Number,
-        back_waist_length: Number,
-        arm_length: Number,
+        shoulderLength: Number,
+        frontWaistLength: Number,
+        backWaistLength: Number,
+        armLength: Number,
         waist: Number,
         hip: Number,
-        hip_dip: Number,
+        hipDip: Number,
         thigh: Number,
         ankle: Number,
         inseam: Number,
         outseam: Number,
-        crotch_depth: Number
+        crotchDepth: Number
     },
     cart: [
         {

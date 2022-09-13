@@ -42,10 +42,10 @@ const signup = async (req, res) => {
 
       const token =  createToken(user._id)
   
-      res.status(200).json({status: 'success', customer, token})
+      res.status(200).json({status: 'success', user: customer, token})
     }catch(err){
-      console.log(err)
-        res.status(500).json({message: 'something went wrong',err: err.name})
+      if(err.name === 'MongoServerError' )return res.status(401).json({ message: 'use a different email.' })
+        res.status(500).json({message: 'something went wrong'})
     }
 }
   

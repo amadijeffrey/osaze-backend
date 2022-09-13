@@ -11,6 +11,12 @@ const getAllOrders = async ( res) => {
     }
   }
 
- const updateOrderStatus =  
+ const updateOrderStatus =  async (req,res ) => {
+    try{
+
+    }catch(err){
+        
+    }
+ }
 
   module.exports = { getAllOrders }

@@ -30,14 +30,14 @@ const login = async (req, res) => {
     const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
     .populate('cart').populate('orders').exec()
     
-    res.status(200).json({status: 'success', customer, token})
+    res.status(200).json({status: 'success', user: customer, token})
   }
 
   if(foundUser.role === 'designer'){
     const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
     .populate('requests').exec()
   
-    res.status(200).json({status: 'success', designer, token})
+    res.status(200).json({status: 'success', user: designer, token})
   }
 
 }

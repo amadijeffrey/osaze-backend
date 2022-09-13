@@ -71,10 +71,10 @@ const createToken = (id) => {
 
       const token =  createToken(user._id)
   
-      res.status(200).json({status: 'success', designer, token})
+      res.status(200).json({status: 'success', user: designer, token})
 
     }catch(err){
-      if(err.name === 'MongoServerError' )return res.status(401).json({ message: 'use a different email or phone number' })
+      if(err.name === 'MongoServerError' )return res.status(401).json({ message: 'use a different email.' })
       res.status(500).json({ message: 'something went wrong' })
 
     }

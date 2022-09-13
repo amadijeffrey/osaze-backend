@@ -15,7 +15,7 @@ router.patch('/updateaddress', isLoggedIn, updateAddress)
 router.get('/getProfile', isLoggedIn, getProfile)
 router.patch('/updateaccount', isLoggedIn, updateAccount)
 router.patch('/updatebusinessinfo', isLoggedIn, updateBusinessInfo)
-router.post('/createproduct', isLoggedIn, upload.single('image'), createProduct)
+router.post('/createproduct', isLoggedIn, upload.single('image'), upload.array('fabrics'), createProduct)
 router.get('/requests', isLoggedIn, getAllRequests)
 
 module.exports = router

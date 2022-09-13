@@ -18,7 +18,18 @@ const updateBodyProfile =  async (req, res) => {
    
 const getAllOrdersForCustomer = async (req, res) => {
     try{
-        const allOrders = Order.find({customer: req.user.userId})
+        const allOrders = await Order.find({customer: req.user.userId, status: { $ne: 'cancelled' }}).populate('item').exec()
+        res.status(200).json({status: 'success', allOrders})
+
+    }catch(err){
+      res.status(500).json({ message: 'something went wrong'})
+
+    }
+}
+
+const getAllClosedOrdersForCustomer = async (req, res) => {
+    try{
+        const allOrders = await Order.find({customer: req.user.userId, status: 'cancelled'}).populate('item').exec()
         res.status(200).json({status: 'success', allOrders})
 
     }catch(err){
@@ -30,7 +41,7 @@ const getAllOrdersForCustomer = async (req, res) => {
 const viewOrder = async (req, res) => {
     try{
     const {id} = req.params
-    const foundOrder = Order.findById(id)
+    const foundOrder = await Order.findById(id)
     if(!foundOrder) return res.status(404).json({status: 'fail' , message: 'order not found'})  
     
     res.status(200).json({foundOrder})

@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema({
          type: String
         } 
     ],
-    customDesigns: [
+    customization: [
         {
          type: String
         } 

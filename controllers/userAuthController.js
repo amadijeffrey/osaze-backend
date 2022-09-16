@@ -69,7 +69,8 @@ const isLoggedIn = async (req, res, next) => {
       next()
     }
     if(foundUser.role === 'designer'){
-      const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('businessInfo').exec()
+      const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('businessInfo')
+      .populate('requests').exec()
       if(!designer) return res.status(401).json({ message: 'this designer account does not exist' })
       req.user = designer
       next()

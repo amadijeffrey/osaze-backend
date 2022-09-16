@@ -13,7 +13,12 @@ const designerSchema = new mongoose.Schema({
        type: mongoose.Schema.Types.ObjectId,
        ref: 'BusinessInfo'
       },
- 
+    requests: [
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Request'
+        }
+      ]
 })
 
 const Designer = mongoose.model('Designer', designerSchema)

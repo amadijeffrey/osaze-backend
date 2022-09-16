@@ -13,7 +13,7 @@ const productsRoutes = require('./routes/productsRoutes')
 const app = express()
 app.use(helmet())
 app.use(cors({
-  origin: '*', 
+  origin: 'http://localhost:3000', 
   optionSuccessStatus:200
 }))
 app.use(express.json())

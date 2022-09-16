@@ -12,10 +12,20 @@ const productsRoutes = require('./routes/productsRoutes')
 
 const app = express()
 app.use(helmet())
-app.use(cors({
-  origin: 'http://localhost:3000', 
-  optionSuccessStatus:200
-}))
+
+var whitelist = ['http://localhost:3000', 'https://osaze.netlify.app', 'https://osaze.org' ]
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  optionsSuccessStatus: 200 
+
+}
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/api/customer', customersRoutes)

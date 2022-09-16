@@ -9,7 +9,7 @@ const updateBodyProfile =  async (req, res) => {
         {bodyProfile:req.body},
         { new: true }).populate('address')
         .populate('userObject').exec()
-        res.status(201).json({ status: 'success', updatedCustomer })
+        res.status(201).json({ status: 'success', user: updatedCustomer })
 
     }catch(err){
         res.status(500).json({ message: 'something went wrong'})
@@ -70,7 +70,7 @@ const addProductToCart = async (req, res) => {
         req.user.cart.push(newCartItem)
         req.user.save()
       
-        res.status(201).json({status: 'success', newCartItem})
+        res.status(200).json({status: 'success', newCartItem})
 
     }catch(err){
         res.status(500).json({ message: 'something went wrong' })
@@ -107,7 +107,6 @@ const removeCartItem = async(req,res) => {
 const cartCheckOut = async (req, res) => {
     try{
         const customer = await Customer.findById(req.user._id)
-        console.log(customer)
         const { reference} = req.body
         req.user.cart.forEach( async (cartItem) => {
           await Promise.all([
@@ -116,7 +115,12 @@ const cartCheckOut = async (req, res) => {
                     designer: cartItem.brandName,
                     item: cartItem._id,
                     customer: req.user.userId,
-                    billingAddress: req.user.address,
+                    billingAddress: {
+                        houseAddress: req.user.userObject.houseAddress,
+                        country: req.user.userObject.country,
+                        state: req.user.userObject.state,
+                        city: req.user.userObject.city,
+                    },
                 }),
                 Request.create({
                     designer: cartItem.brandName,

@@ -1,5 +1,5 @@
 const User = require('../models/user')
-const Address = require('../models/address')
+const BusinessInfo = require('../models/businessInfo')
 const Designer = require('../models/designer')
 const jwt = require('jsonwebtoken')
 const {jwtSecretKey, jwtExpiry} = require('../config')
@@ -32,15 +32,9 @@ const createToken = (id) => {
       const existingUser = await User.findOne({ firstName, lastName, email })
       if (existingUser) return res.json({ message: 'User already exist' })
 
-      const userObject = { firstName, lastName, password, email, phoneNumber, role: 'designer' }
+      const userObject = { firstName, lastName, password, email, phoneNumber, role: 'designer', houseAddress, state,  city, country }
       const user = await User.create(userObject)
 
-      const address = await Address.create({
-        houseAddress, 
-        state,
-        city,
-        country
-      })
   
       let url 
       if(req.file){
@@ -50,7 +44,7 @@ const createToken = (id) => {
         url = ''
       }
 
-     const businessInfo =  {
+     const businessInfo =  await BusinessInfo.create({
         brandName,
         brandInfo,
         brandLocation,
@@ -60,12 +54,11 @@ const createToken = (id) => {
         sketchSkill,
         sewSkill,
         imgUrl: url
-      }
+      })
    
       const designer = await Designer.create({
         userId: user._id,
         userObject: user,
-        address: address,
         businessInfo
       })
 

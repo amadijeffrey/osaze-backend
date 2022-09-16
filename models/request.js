@@ -6,6 +6,10 @@ const requestSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CartItem'
     },
+    date_created: {
+        type: Date,
+        default: Date.now,
+    },
     status:{
         type: String,
         enum: ['pending', 'completed'],

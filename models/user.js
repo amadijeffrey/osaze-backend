@@ -39,7 +39,19 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 11,
         trim: true,
-      }
+    },
+    houseAddress: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    }
 })
 
 userSchema.pre('save',  async function (next) {

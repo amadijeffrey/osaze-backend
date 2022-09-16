@@ -9,10 +9,7 @@ const customerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    address: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address'
-    },
+
     bodyProfile: {
         bust: Number,
         shoulderLength: Number,
@@ -34,12 +31,7 @@ const customerSchema = new mongoose.Schema({
             ref: 'CartItem'
         }
     ],
-    orders: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Order'
-        }
-    ],
+ 
     messages: [
         {
             type:String

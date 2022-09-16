@@ -27,15 +27,15 @@ const login = async (req, res) => {
   const token =  createToken(foundUser._id)
 
   if (foundUser.role === 'customer'){
-    const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
-    .populate('cart').populate('orders').exec()
+    const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
+    .populate('cart').exec()
     
     res.status(200).json({status: 'success', user: customer, token})
   }
 
   if(foundUser.role === 'designer'){
-    const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
-    .populate('requests').exec()
+    const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject')
+    .populate('requests').populate('businessInfo').exec()
   
     res.status(200).json({status: 'success', user: designer, token})
   }
@@ -62,14 +62,14 @@ const isLoggedIn = async (req, res, next) => {
 
     // set different user
     if(foundUser.role === 'customer'){
-      const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject').populate('address')
-      .populate('cart').populate('orders').exec()
+      const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
+      .populate('cart').exec()
       if(!customer) return res.status(401).json({ message: 'this customer account does not exist' })
       req.user = customer
       next()
     }
     if(foundUser.role === 'designer'){
-      const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('address').exec()
+      const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject').populate('businessInfo').exec()
       if(!designer) return res.status(401).json({ message: 'this designer account does not exist' })
       req.user = designer
       next()
@@ -88,8 +88,8 @@ const isLoggedIn = async (req, res, next) => {
     // }
     
   } catch (err) {
-    if(err.name === 'TokenExpiredError' )return res.status(401).json({ message: 'Please login' })
-    if(err.name === 'JsonWebTokenError' )return res.status(401).json({ message: 'Please login' })
+    if(err.name === 'TokenExpiredError' )return res.status(400).json({ message: 'Please login' })
+    if(err.name === 'JsonWebTokenError' )return res.status(400).json({ message: 'Please login' })
     res.status(500).json({ message: 'something went wrong' })
   }
 }
@@ -149,7 +149,7 @@ const updatePassword = async (req, res) => {
   try{
   // get user from collection
   const foundUser = await User.findById(req.user.userId)
-  if (!foundUser) return res.status(401).json({ message: 'User not found. Please log in again' })
+  if (!foundUser) return res.status(404).json({ message: 'User not found. Please log in again' })
 
   // check if posted password is correct
   const candidatePassword = req.body.currentPassword
@@ -162,7 +162,7 @@ const updatePassword = async (req, res) => {
 
   // login user, send JWT
   const token =  createToken(foundUser._id)
-  res.status(200).json({status: 'success', foundUser, token})
+  res.status(201).json({status: 'success', foundUser, token})
 
   }catch(err){
     res.status(500).json({ message: 'something went wrong' })

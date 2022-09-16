@@ -24,20 +24,12 @@ const signup = async (req, res) => {
       const existingUser = await User.findOne({ firstName, lastName, email })
       if (existingUser) return res.json({ message: 'User already exist' })
   
-      const userObject = { firstName, lastName, password, email, phoneNumber}
+      const userObject = { firstName, lastName, password, email, phoneNumber, houseAddress, state,  city, country }
       const user = await User.create(userObject)
-  
-      const address = await Address.create({
-        houseAddress, 
-        state,
-        city,
-        country
-      })
   
       const customer = await Customer.create({
         userId: user._id,
-        userObject: user,
-        address: address
+        userObject: user
       })
 
       const token =  createToken(user._id)

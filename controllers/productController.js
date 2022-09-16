@@ -63,68 +63,7 @@ const searchForProduct = async (req, res) => {
     }
 }
 
-const addProductToCart = async(req,res) => {
-    try{
-    const user = await User.findById(req.user._id)
-    const { name, image, price, size, qty} = req.body
-    const product = {
-        name,
-        image,
-        price,
-        size,
-        qty
-    }
-    const newCartItem = await CartItem.create(product)
-    user.cart.push(newCartItem)
-    user.save()
-    res.status(201).json({status: 'success', newCartItem})
-    }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
-    }
-
-}
-
-const updateCartItem = async(req,res) => {
-    try{
-        const { id } = req.params
-        const { qty } = req.body
-        const user = await User.findById(req.user._id)
-
-        const updatedCartItem = await CartItem.findByIdAndUpdate(id,{qty}, {new:true} )
-        user.cart.push(updatedCartItem)
-        user.save()
-        res.status(201).json({status: 'success', updatedCartItem})
-
-    }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
-    }
-}
 
 
-const deleteCartItem = async(req,res) => {
-    try{
-        const { id } = req.params
-        await CartItem.findByIdAndRemove(id )
-        res.status(201).json({status: 'success', id})
-
-
-    }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
-    }
-}
-
-const addReferenceToUser = async (req, res) => {
-    try{
-        const user = await User.findById(req.user._id)
-        const { reference } = req.body
-
-        user.ref = reference
-        user.save()
-        res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
-
-    } catch(err){
-        res.status(500).json({ message: 'something went wrong' })
-    }
-}
 
 module.exports = { getFeaturedProducts, getProduct, getProductsUnderCategory, searchForProduct,}

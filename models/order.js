@@ -24,8 +24,10 @@ const orderSchema = new  mongoose.Schema({
         type: Date,
     },
     billingAddress: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address'
+        houseAddress: String,
+        country: String,
+        city:  String,
+        state: String
     },
    status:{
     type: String,

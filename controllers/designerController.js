@@ -10,13 +10,14 @@ const createProduct = async(req, res) => {
     const {name, category, description, price, subCategory, sizes, customization} = req.body
     const { brandName } = req.user.businessInfo
 
-
+    const imageIds = []
     const data = await cloudinary.uploader.upload(req.files['image'][0].path, {folder: 'products'})
     const image = data.secure_url
+    imageIds.push(data.public_id)
 
     const fabrics = []
     req.files['fabrics'].forEach(async (fabric) => {
-      const {secure_url} = await cloudinary.uploader.upload(fabric.path,{folder: 'products'})
+      const {secure_url, public_id } = await cloudinary.uploader.upload(fabric.path,{folder: 'products'})
       fabrics.push(secure_url)
     })
 
@@ -31,7 +32,7 @@ const createProduct = async(req, res) => {
 
      res.status(200).json({status: 'success', newProduct})
    }catch(err){
-    res.status(500).json({ message: 'something went wrong', err: err.name})
+    res.status(500).json({ status: 'fail', message: 'something went wrong', err: err.name})
     }
 }
 
@@ -97,34 +98,3 @@ const allSales = async(req, res) => {
 
 module.exports = {createProduct, updateBusinessInfo, getAllRequests, allSales} 
 
-// {
-// 	"description": "Model is wearing a size small Silk fabric with Invisible back zipper, detachable train, One Sleeve and high slit on left leg etc.",
-// 	"name": "pink trad",
-// 	"sizes": ["xl", "l", "s", "m"],
-// 	"price": 25,
-// 	"category": "men",
-// 	"brandName": "wigs by kezor",
-// 	"fabrics": [
-// 			{"lastModified": 1663095204120,
-// "name": "images.jpeg",
-// "size": 3428,
-// "type": "image/jpeg"
-// },
-// 		{"lastModified": 1663095254105,
-// "name": "images1.jpeg",
-// "size": 10093,
-// "type": "image/jpeg"
-// },
-// 		{"lastModified": 1663095304125,
-// "name": "images2.jpeg",
-// "size": 13428,
-// "type": "image/jpeg"
-// }
-// 	],
-// 	"image": {"lastModified": 1663095204120,
-// "name": "images4.jpeg",
-// "size": 34298,
-// "type": "image/jpeg"
-// }
-	
-// }

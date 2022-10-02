@@ -31,7 +31,11 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageId: String,
+    imageIds: [
+        {
+         type: String
+        }
+    ],
     sizes: [
        {
         type: String

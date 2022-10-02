@@ -4,8 +4,7 @@ const Customer = require('../models/customer')
 const jwt = require('jsonwebtoken')
 const {jwtSecretKey, jwtExpiry} = require('../config')
 
-
-createToken = (id) => {
+const createToken = (id) => {
     return jwt.sign({ id}, jwtSecretKey, { expiresIn: jwtExpiry })
   }
   

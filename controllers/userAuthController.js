@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken')
 const { promisify } = require('util')
 // const sendEmail = require('../utils/email')
 const crypto = require('crypto')
-const {jwtSecretKey} = require('../config')
+const {jwtSecretKey, jwtExpiry} = require('../config')
 
 
-createToken = (id) => {
+const createToken = (id) => {
   return jwt.sign({ id}, jwtSecretKey, { expiresIn: jwtExpiry })
 }
 

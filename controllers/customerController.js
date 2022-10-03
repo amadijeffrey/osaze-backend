@@ -7,7 +7,7 @@ const updateBodyProfile =  async (req, res) => {
     try{
         const updatedCustomer = await Customer.findByIdAndUpdate(req.user._id,
         {bodyProfile:req.body},
-        { new: true }).populate('address')
+        { new: true })
         .populate('userObject').exec()
         res.status(201).json({ status: 'success', user: updatedCustomer })
 
@@ -18,7 +18,7 @@ const updateBodyProfile =  async (req, res) => {
    
 const getAllOrdersForCustomer = async (req, res) => {
     try{
-        const allOrders = await Order.find({customer: req.user.userId, status: { $ne: 'cancelled' }}).populate('item').exec()
+        const allOrders = await Order.find({customer: req.user.userId}).populate('item').exec()
         res.status(200).json({status: 'success', allOrders})
 
     }catch(err){
@@ -27,16 +27,7 @@ const getAllOrdersForCustomer = async (req, res) => {
     }
 }
 
-const getAllClosedOrdersForCustomer = async (req, res) => {
-    try{
-        const allOrders = await Order.find({customer: req.user.userId, status: 'cancelled'}).populate('item').exec()
-        res.status(200).json({status: 'success', allOrders})
 
-    }catch(err){
-      res.status(500).json({ message: 'something went wrong'})
-
-    }
-}
    
 const viewOrder = async (req, res) => {
     try{
@@ -104,35 +95,40 @@ const removeCartItem = async(req,res) => {
     }
 }
 
-const cartCheckOut = async (req, res) => {
+const cartCheckOut =  (req, res) => {
     try{
-        const customer = await Customer.findById(req.user._id)
-        const { reference} = req.body
-        req.user.cart.forEach( async (cartItem) => {
-          await Promise.all([
-                Order.create({
-                    ref: reference,
-                    designer: cartItem.brandName,
-                    item: cartItem._id,
-                    customer: req.user.userId,
-                    billingAddress: {
-                        houseAddress: req.user.userObject.houseAddress,
-                        country: req.user.userObject.country,
-                        state: req.user.userObject.state,
-                        city: req.user.userObject.city,
-                    },
-                }),
-                Request.create({
-                    designer: cartItem.brandName,
-                    item: cartItem._id
-                })
-            ])
-        })
+        console.log('grgr')
+        // const ordersArray = []
+        // const { reference} = req.body
+        // req.user.cart.forEach( async (cartItem) => {
+        //    const [order] = await Promise.all([
+        //         Order.create({
+        //             ref: reference,
+        //             designer: cartItem.brandName,
+        //             item: cartItem._id,
+        //             customer: req.user.userId,
+        //             billingAddress: {
+        //                 houseAddress: req.user.userObject.houseAddress,
+        //                 country: req.user.userObject.country,
+        //                 state: req.user.userObject.state,
+        //                 city: req.user.userObject.city,
+        //             },
+        //         }),
+        //         Request.create({
+        //             designer: cartItem.brandName,
+        //             item: cartItem._id
+        //         })
+        //     ])
+        //     ordersArray.push(order)
+        // })
+        // req.user.orders = ordersArray
+        // req.user.save()
 
-        res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
+        // res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
 
     }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
+        console.log(err)
+        // res.status(500).json({ message: 'something went wrong' })
     }
 }
 

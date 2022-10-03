@@ -1,7 +1,6 @@
 const User = require('../models/user')
 const Customer = require('../models/customer')
 const Designer = require('../models/designer')
-const Address = require('../models/address')
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {}
@@ -32,7 +31,7 @@ const updateAccount = async (req, res) => {
   if (req.body.password) return res.status(401).json({ message: 'This is not the password update route.' })
 
   // filter out the neccesaary data
-  const filteredObject = filterObj(req.body, 'firstName','lastName', 'phone', 'email',
+  const filteredObject = filterObj(req.body, 'firstName','lastName', 'phoneNumber', 'email',
                                      'houseAddress', 'country', 'city', 'state' )
   
    // update user

@@ -28,7 +28,7 @@ const login = async (req, res) => {
 
   if (foundUser.role === 'customer'){
     const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
-    .populate('cart').exec()
+    .populate('cart').populate('orders').exec()
     
     res.status(200).json({status: 'success', user: customer, token})
   }

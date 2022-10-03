@@ -31,7 +31,12 @@ const customerSchema = new mongoose.Schema({
             ref: 'CartItem'
         }
     ],
- 
+    orders: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order'
+        }
+    ],
     messages: [
         {
             type:String

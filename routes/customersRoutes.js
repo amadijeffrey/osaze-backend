@@ -14,10 +14,10 @@ router.patch('/updateaccount', isLoggedIn, updateAccount)
 router.patch('/updatebodyprofile', isLoggedIn, updateBodyProfile)
 router.get('/getProfile', isLoggedIn, getProfile)
 router.get('/order/:id', isLoggedIn, viewOrder)
-router.get('/orders/', isLoggedIn, getAllOrdersForCustomer)
+router.get('/orders', isLoggedIn, getAllOrdersForCustomer)
 router.post('/cart/add', isLoggedIn, addProductToCart)
-router.post('/cart/:id', isLoggedIn, updateCartItem)
 router.post('/cart/checkout', isLoggedIn, cartCheckOut )
+router.post('/cart/:id', isLoggedIn, updateCartItem)
 router.get('/allorders', isLoggedIn,  getAllOrdersForCustomer)
 
 module.exports = router

@@ -8,11 +8,11 @@ const updateBodyProfile =  async (req, res) => {
         const updatedCustomer = await Customer.findByIdAndUpdate(req.user._id,
         {bodyProfile:req.body},
         { new: true })
-        .populate('userObject').exec()
+        .populate('userObject').populate('cart').exec()
         res.status(201).json({ status: 'success', user: updatedCustomer })
 
     }catch(err){
-        res.status(500).json({ message: 'something went wrong'})
+        res.status(500).json({ message: 'something went wrong', err})
     }
 }
    
@@ -22,7 +22,7 @@ const getAllOrdersForCustomer = async (req, res) => {
         res.status(200).json({status: 'success', allOrders})
 
     }catch(err){
-      res.status(500).json({ message: 'something went wrong'})
+      res.status(500).json({ message: 'something went wrong', err})
 
     }
 }
@@ -37,7 +37,7 @@ const viewOrder = async (req, res) => {
     
     res.status(200).json({foundOrder})
     }catch(err){
-    res.status(500).json({ message: 'something went wrong'})
+    res.status(500).json({ message: 'something went wrong', err})
 
     }
 }
@@ -64,7 +64,7 @@ const addProductToCart = async (req, res) => {
         res.status(200).json({status: 'success', newCartItem})
 
     }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
+        res.status(500).json({ message: 'something went wrong', err })
     }
 }
 
@@ -80,7 +80,7 @@ const updateCartItem = async(req,res) => {
         res.status(201).json({status: 'success', updatedCartItem})
 
     }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
+        res.status(500).json({ message: 'something went wrong', err })
     }
 }
    
@@ -91,48 +91,47 @@ const removeCartItem = async(req,res) => {
         res.status(201).json({status: 'success', id})
 
     }catch(err){
-        res.status(500).json({ message: 'something went wrong' })
+        res.status(500).json({ message: 'something went wrong', err })
     }
 }
 
 const cartCheckOut =  (req, res) => {
     try{
-        console.log('grgr')
-        // const ordersArray = []
-        // const { reference} = req.body
-        // req.user.cart.forEach( async (cartItem) => {
-        //    const [order] = await Promise.all([
-        //         Order.create({
-        //             ref: reference,
-        //             designer: cartItem.brandName,
-        //             item: cartItem._id,
-        //             customer: req.user.userId,
-        //             billingAddress: {
-        //                 houseAddress: req.user.userObject.houseAddress,
-        //                 country: req.user.userObject.country,
-        //                 state: req.user.userObject.state,
-        //                 city: req.user.userObject.city,
-        //             },
-        //         }),
-        //         Request.create({
-        //             designer: cartItem.brandName,
-        //             item: cartItem._id
-        //         })
-        //     ])
-        //     ordersArray.push(order)
-        // })
-        // req.user.orders = ordersArray
-        // req.user.save()
+        const ordersArray = []
+        const { reference} = req.body
+        req.user.cart.forEach( async (cartItem) => {
+           const [order] = await Promise.all([
+                Order.create({
+                    ref: reference,
+                    designer: cartItem.brandName,
+                    item: cartItem._id,
+                    customer: req.user.userId,
+                    billingAddress: {
+                        houseAddress: req.user.userObject.houseAddress,
+                        country: req.user.userObject.country,
+                        state: req.user.userObject.state,
+                        city: req.user.userObject.city,
+                    },
+                }),
+                Request.create({
+                    designer: cartItem.brandName,
+                    item: cartItem._id
+                })
+            ])
+            ordersArray.push('j')
+        })
+        console.log(ordersArray, 'gof')
+        req.user.orders = ordersArray
+        req.user.save()
 
-        // res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
+        res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
 
     }catch(err){
-        console.log(err)
-        // res.status(500).json({ message: 'something went wrong' })
+        res.status(500).json({ message: 'something went wrong', err })
     }
 }
 
 
 
   module.exports = {updateBodyProfile, viewOrder, getAllOrdersForCustomer, 
-    addProductToCart, updateCartItem, removeCartItem, cartCheckOut ,} 
+    addProductToCart, updateCartItem, removeCartItem, cartCheckOut} 

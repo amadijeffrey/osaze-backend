@@ -60,10 +60,10 @@ const isLoggedIn = async (req, res, next) => {
     // check if user password has been changed
     if (foundUser.changedPasswordAfter(decoded.iat)) return res.status(401).json({ message: 'User recently changed password. Please login again' })
 
-    // set different user
+    // set different users
     if(foundUser.role === 'customer'){
       const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
-      .populate('cart').exec()
+      .populate('cart').populate('orders').exec()
       if(!customer) return res.status(401).json({ message: 'this customer account does not exist' })
       req.user = customer
       next()
@@ -91,8 +91,7 @@ const isLoggedIn = async (req, res, next) => {
   } catch (err) {
     if(err.name === 'TokenExpiredError' )return res.status(400).json({ message: 'Please login' })
     if(err.name === 'JsonWebTokenError' )return res.status(400).json({ message: 'Please login' })
-    res.status(500).json({ message: 'something went wrong' })
-  }
+    }
 }
 
 

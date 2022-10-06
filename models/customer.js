@@ -11,7 +11,7 @@ const customerSchema = new mongoose.Schema({
     },
 
     bodyProfile: {
-        type: Object
+        type: 'Object'
     },
     cart: [
         {

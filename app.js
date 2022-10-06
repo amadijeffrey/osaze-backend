@@ -27,7 +27,7 @@ mongoose.connect(DBURL,
     useNewUrlParser: true,
     useUnifiedTopology: true
   }
-).then(() => console.log('DB connected '))
+).then(() => console.log('DB connected ')).catch(() => console.log('DB error '))
 
 app.get('/health', (req,res) => {
   res.status(200).json({message: 'ok'})

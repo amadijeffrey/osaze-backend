@@ -31,14 +31,13 @@ const getAllOrdersForCustomer = async (req, res) => {
    
 const viewOrder = async (req, res) => {
     try{
-    const {id} = req.params
-    const foundOrder = await Order.findById(id)
-    if(!foundOrder) return res.status(404).json({status: 'fail' , message: 'order not found'})  
-    
-    res.status(200).json({foundOrder})
+        const {id} = req.params
+        const foundOrder = await Order.findById(id)
+        if(!foundOrder) return res.status(404).json({status: 'fail' , message: 'order not found'})  
+        
+        res.status(200).json({foundOrder})
     }catch(err){
-    res.status(500).json({ message: 'something went wrong', err})
-
+        res.status(500).json({ message: 'something went wrong', err})
     }
 }
 
@@ -72,11 +71,10 @@ const updateCartItem = async(req,res) => {
     try{
         const { id } = req.params
         const { qty } = req.body
-        const customer = await Customer.findById(req.user._id)
 
         const updatedCartItem = await CartItem.findByIdAndUpdate(id,{qty}, {new:true} )
-        customer.cart.push(updatedCartItem)
-        customer.save()
+        req.user.cart.push(updatedCartItem)
+        req.user.save()
         res.status(201).json({status: 'success', updatedCartItem})
 
     }catch(err){
@@ -99,7 +97,7 @@ const cartCheckOut =  (req, res) => {
     try{
         const ordersArray = []
         const { reference} = req.body
-        req.user.cart.forEach( async (cartItem) => {
+        req.user.cart.forEach(  async (cartItem) => {
            const [order] = await Promise.all([
                 Order.create({
                     ref: reference,
@@ -118,11 +116,11 @@ const cartCheckOut =  (req, res) => {
                     item: cartItem._id
                 })
             ])
-            ordersArray.push('j')
+          
         })
-        console.log(ordersArray, 'gof')
-        req.user.orders = ordersArray
-        req.user.save()
+        console.log('1' ) // show empty array ?
+        // req.user.orders = ordersArray
+        // req.user.save()
 
         res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
 
@@ -131,6 +129,13 @@ const cartCheckOut =  (req, res) => {
     }
 }
 
+function returnPromise(){
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve('order created')
+        },3000)
+    })
+}
 
 
   module.exports = {updateBodyProfile, viewOrder, getAllOrdersForCustomer, 

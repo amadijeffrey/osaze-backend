@@ -26,9 +26,11 @@ const signup = async (req, res) => {
       const userObject = { firstName, lastName, password, email, phoneNumber, houseAddress, state,  city, country }
       const user = await User.create(userObject)
   
+      const bodyProfile = new BodyProfile()
       const customer = await Customer.create({
         userId: user._id,
-        userObject: user
+        userObject: user,
+        bodyProfile
       })
 
       const token =  createToken(user._id)
@@ -40,4 +42,21 @@ const signup = async (req, res) => {
     }
 }
   
+class BodyProfile{
+  constructor(){
+    this.bust = ''
+    this.shoulderLength = ''
+    this.frontWaistLength = ''
+    this.backWaistLength = ''
+    this.armLength = ''
+    this.waist = ''
+    this.hip = ''
+    this.hipDip = ''
+    this.thigh = ''
+    this.ankle = ''
+    this.inseam = ''
+    this.outseam = ''
+    this.crotchDepth = ''
+  }
+}
   module.exports = {signup}

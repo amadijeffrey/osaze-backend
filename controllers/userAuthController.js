@@ -13,33 +13,36 @@ const createToken = (id) => {
 }
 
 const login = async (req, res) => {
-  const { email, password } = req.body
+  try{
+      const { email, password } = req.body
 
-  // check if user exist
-  if (!email || !password) return res.status(400).json('Please provide email and password')
-  const foundUser = await User.findOne({ email })
+      // check if user exist
+      if (!email || !password) return res.status(400).json('Please provide email and password')
+      const foundUser = await User.findOne({ email })
 
-  // check if password is correct
-  if (!foundUser || !await foundUser.correctPassword(password, foundUser.password)) {
-    return res.status(401).json({ message: 'Incorrect username or password' })
+      // check if password is correct
+      if (!foundUser || !await foundUser.correctPassword(password, foundUser.password)) {
+        return res.status(401).json({ message: 'Incorrect username or password' })
+      }
+
+      const token =  createToken(foundUser._id)
+
+      if (foundUser.role === 'customer'){
+        const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
+        .populate('cart').populate('orders').exec()
+        
+        res.status(200).json({status: 'success', user: customer, token})
+      }
+
+      if(foundUser.role === 'designer'){
+        const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject')
+        .populate('requests').populate('businessInfo').exec()
+      
+        res.status(200).json({status: 'success', user: designer, token})
+      }
+  }catch(err){
+    res.status(500).json({ message: 'something went wrong' })
   }
-
-  const token =  createToken(foundUser._id)
-
-  if (foundUser.role === 'customer'){
-    const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
-    .populate('cart').populate('orders').exec()
-    
-    res.status(200).json({status: 'success', user: customer, token})
-  }
-
-  if(foundUser.role === 'designer'){
-    const designer = await Designer.findOne({userId: foundUser._id}).populate('userObject')
-    .populate('requests').populate('businessInfo').exec()
-  
-    res.status(200).json({status: 'success', user: designer, token})
-  }
-
 }
 
 const isLoggedIn = async (req, res, next) => {
@@ -91,6 +94,7 @@ const isLoggedIn = async (req, res, next) => {
   } catch (err) {
     if(err.name === 'TokenExpiredError' )return res.status(400).json({ message: 'Please login' })
     if(err.name === 'JsonWebTokenError' )return res.status(400).json({ message: 'Please login' })
+    res.status(500).json({ message: 'something went wrong' })
     }
 }
 

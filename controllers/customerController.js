@@ -5,8 +5,13 @@ const Request = require('../models/request')
 
 const updateBodyProfile =  async (req, res) => {
     try{
+        const {bodyProfile} = req.body
+         for(const properties in bodyProfile){
+            bodyProfile[properties] = Number(bodyProfile[properties])
+         }
+
         const updatedCustomer = await Customer.findByIdAndUpdate(req.user._id,
-        {bodyProfile:req.body},
+        {bodyProfile},
         { new: true })
         .populate('userObject').populate('cart').exec()
         res.status(201).json({ status: 'success', user: updatedCustomer })
@@ -97,7 +102,7 @@ const cartCheckOut =  (req, res) => {
     try{
         const { reference} = req.body
         req.user.cart.forEach( (cartItem) => {
-         Promise.all([
+          Promise.all([
                 Order.create({
                     ref: reference,
                     designer: cartItem.brandName,

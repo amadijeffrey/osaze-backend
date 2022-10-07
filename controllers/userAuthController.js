@@ -29,7 +29,7 @@ const login = async (req, res) => {
 
       if (foundUser.role === 'customer'){
         const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
-        .populate('cart').populate('orders').exec()
+        .populate('cart').exec()
         
         res.status(200).json({status: 'success', user: customer, token})
       }
@@ -66,7 +66,7 @@ const isLoggedIn = async (req, res, next) => {
     // set different users
     if(foundUser.role === 'customer'){
       const customer = await Customer.findOne({userId: foundUser._id}).populate('userObject')
-      .populate('cart').populate('orders').exec()
+      .populate('cart').exec()
       if(!customer) return res.status(401).json({ message: 'this customer account does not exist' })
       req.user = customer
       next()

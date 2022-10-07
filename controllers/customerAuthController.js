@@ -37,26 +37,26 @@ const signup = async (req, res) => {
   
       res.status(200).json({status: 'success', user: customer, token})
     }catch(err){
-      if(err.name === 'MongoServerError' )return res.status(401).json({ message: 'use a different email.' })
+      if(err.name === 'MongoServerError' )return res.status(401).json({ message: 'use a different email.', err })
         res.status(500).json({message: 'something went wrong'})
     }
 }
   
 class BodyProfile{
   constructor(){
-    this.bust = ''
-    this.shoulderLength = ''
-    this.frontWaistLength = ''
-    this.backWaistLength = ''
-    this.armLength = ''
-    this.waist = ''
-    this.hip = ''
-    this.hipDip = ''
-    this.thigh = ''
-    this.ankle = ''
-    this.inseam = ''
-    this.outseam = ''
-    this.crotchDepth = ''
+    this.bust = 0
+    this.shoulderLength = 0
+    this.frontWaistLength = 0
+    this.backWaistLength = 0
+    this.armLength = 0
+    this.waist = 0
+    this.hip = 0
+    this.hipDip = 0
+    this.thigh = 0
+    this.ankle = 0
+    this.inseam = 0
+    this.outseam = 0
+    this.crotchDepth = 0
   }
 }
   module.exports = {signup}

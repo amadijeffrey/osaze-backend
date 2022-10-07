@@ -11,18 +11,12 @@ const customerSchema = new mongoose.Schema({
     },
 
     bodyProfile: {
-        type: 'Object'
+        type: Object
     },
     cart: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'CartItem'
-        }
-    ],
-    orders: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Order'
         }
     ],
     messages: [

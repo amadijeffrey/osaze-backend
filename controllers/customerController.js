@@ -95,10 +95,9 @@ const removeCartItem = async(req,res) => {
 
 const cartCheckOut =  (req, res) => {
     try{
-        const ordersArray = []
         const { reference} = req.body
-        req.user.cart.forEach(  async (cartItem) => {
-           const [order] = await Promise.all([
+        req.user.cart.forEach( (cartItem) => {
+         Promise.all([
                 Order.create({
                     ref: reference,
                     designer: cartItem.brandName,
@@ -118,9 +117,8 @@ const cartCheckOut =  (req, res) => {
             ])
           
         })
-        console.log('1' ) // show empty array ?
-        // req.user.orders = ordersArray
-        // req.user.save()
+        req.user.cart = []
+        req.user.save()
 
         res.status(200).json({ status: 'success', message: 'Your order has been received. It would be shipped soon.' })
 

@@ -22,7 +22,7 @@ const login = async (req, res) => {
 
       // check if password is correct
       if (!foundUser || !await foundUser.correctPassword(password, foundUser.password)) {
-        return res.status(401).json({ message: 'Incorrect username or password' })
+        return res.status(401).json({ message: 'Incorrect email or password' })
       }
 
       const token =  createToken(foundUser._id)

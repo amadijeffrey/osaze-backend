@@ -5,13 +5,13 @@ const Request = require('../models/request')
 
 const updateBodyProfile =  async (req, res) => {
     try{
-        const {bodyProfile} = req.body
-         for(const properties in bodyProfile){
-            bodyProfile[properties] = Number(bodyProfile[properties])
+        
+         for(const properties in req.body){
+            req.body[properties] = Number(req.body[properties])
          }
 
         const updatedCustomer = await Customer.findByIdAndUpdate(req.user._id,
-        {bodyProfile},
+        {bodyProfile: req.body},
         { new: true })
         .populate('userObject').populate('cart').exec()
         res.status(201).json({ status: 'success', user: updatedCustomer })
@@ -143,3 +143,5 @@ function returnPromise(){
 
   module.exports = {updateBodyProfile, viewOrder, getAllOrdersForCustomer, 
     addProductToCart, updateCartItem, removeCartItem, cartCheckOut} 
+
+  

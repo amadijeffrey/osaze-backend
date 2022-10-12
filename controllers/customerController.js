@@ -14,6 +14,7 @@ const updateBodyProfile =  async (req, res) => {
         {bodyProfile: req.body},
         { new: true })
         .populate('userObject').populate('cart').exec()
+        
         res.status(201).json({ status: 'success', user: updatedCustomer })
 
     }catch(err){

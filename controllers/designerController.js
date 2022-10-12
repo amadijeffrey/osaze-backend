@@ -16,17 +16,18 @@ const createProduct = async(req, res) => {
     imageIds.push(data.public_id)
 
     const fabrics = []
-    req.files['fabrics'].forEach(async (fabric) => {
-      const {secure_url, public_id } = await cloudinary.uploader.upload(fabric.path,{folder: 'products'})
+    for (const fabric of req.files['fabrics']){
+      const {secure_url, public_id } = await cloudinary.uploader.upload(fabric.path ,{folder: 'products'})
       fabrics.push(secure_url)
-    })
+      imageIds.push(public_id)
+    }
+ 
 
-    
    const prices =  availableCurrencies.map(currency => {
                 return new Price(currency, convertFromUSD(price,currency.label))
             })   
 
-    const productData = {name, category, description, prices, imageId: data.public_id, image, brandName, subCategory,
+    const productData = {name, category, description, prices, imageIds, image, brandName, subCategory,
       customization, sizes, fabrics}
     const newProduct = await Product.create(productData)
 

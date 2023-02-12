@@ -5,10 +5,9 @@ const Request = require('../models/request')
 
 const updateBodyProfile =  async (req, res) => {
     try{
-        
-         for(const properties in req.body){
+        for(const properties in req.body){
             req.body[properties] = Number(req.body[properties])
-         }
+        }
 
         const updatedCustomer = await Customer.findByIdAndUpdate(req.user._id,
         {bodyProfile: req.body},
@@ -26,10 +25,8 @@ const getAllOrdersForCustomer = async (req, res) => {
     try{
         const allOrders = await Order.find({customer: req.user.userId}).populate('item').exec()
         res.status(200).json({status: 'success', allOrders})
-
     }catch(err){
       res.status(500).json({ message: 'something went wrong', err})
-
     }
 }
 
@@ -78,7 +75,7 @@ const updateCartItem = async(req,res) => {
         const { id } = req.params
         const { qty } = req.body
 
-        const updatedCartItem = await CartItem.findByIdAndUpdate(id,{qty}, {new:true} )
+        const updatedCartItem = await CartItem.findByIdAndUpdate(id, {qty}, {new:true} )
         req.user.cart.push(updatedCartItem)
         req.user.save()
         res.status(201).json({status: 'success', updatedCartItem})
@@ -121,7 +118,6 @@ const cartCheckOut =  (req, res) => {
                     item: cartItem._id
                 })
             ])
-          
         })
         req.user.cart = []
         req.user.save()

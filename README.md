@@ -4,6 +4,8 @@ These endpoints are for a web application that allow customers to place orders o
 BaseURL: https://osazebackend.vercel.app
 Apart from the signup and login request, you need to pass bearer token as a header in every request for authentication.
 
+set up node envitonment type and othe env variables found in ./config.js
+
 ## Customer endpoints
 
 ### Signup
